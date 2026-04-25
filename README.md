@@ -253,7 +253,7 @@ You will launch **two** instances. Follow the steps below for each, changing the
 
 1. Navigate to the **EC2** service → **Instances** → **Launch instances**.
 2. **Name**: `EC2-Instance-1` (use `EC2-Instance-2` for the second instance).
-3. **AMI**: Amazon Linux 2023 (or Amazon Linux 2) — free tier eligible.
+3. **AMI**: Amazon Linux 2 (free tier eligible). To find the latest AMI, search for "Amazon Linux 2" in the AMI catalog during instance launch.
 4. **Instance type**: `t2.micro` (free tier eligible).
 5. **Key pair**: Select an existing key pair or create a new one and download the `.pem` file. You need this to SSH into the instance.
 6. Under **Network settings** → **Edit**:
@@ -264,7 +264,16 @@ You will launch **two** instances. Follow the steps below for each, changing the
 7. Click **Launch instance**.
 8. Repeat for the second instance using `Subnet-2`.
 
-**AWS CLI** (replace `<ami-id>` with a valid AMI ID for your region, e.g., `ami-0c02fb55956c7d316` for Amazon Linux 2 in `us-east-1`)
+**AWS CLI** (replace `<ami-id>` with the current Amazon Linux 2 AMI ID for your region — look it up with the command below or check the EC2 console AMI catalog)
+
+```bash
+# Look up the latest Amazon Linux 2 AMI ID for your region
+aws ec2 describe-images \
+  --owners amazon \
+  --filters "Name=name,Values=amzn2-ami-hvm-*-x86_64-gp2" "Name=state,Values=available" \
+  --query "sort_by(Images, &CreationDate)[-1].ImageId" \
+  --output text
+```
 
 ```bash
 # EC2 Instance 1 — in Subnet 1
